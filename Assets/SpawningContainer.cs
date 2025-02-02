@@ -13,31 +13,18 @@ public class SpawningContainer : ScriptableObject
 {
     public Slot[] Slots;
 
-    public ConstantFloor[] constantFloors;
+    public FloorInfo[] constantFloors;
+
+    public FloorInfo[] notPremitted;
 
     public MapSlot GetMapSlot(int2 index){
 
-        if(TryGetConstantFloor(index.y, out MapSlot mapSlot))
+        if(TryGetConstantFloor(constantFloors, index.y, out MapSlot mapSlot))
             return mapSlot;
 
         return RandomSlot(index.y);
     }
 
-    bool TryGetConstantFloor(int floorLevel, out MapSlot mapSlot){
-
-        for (int i = 0; i < constantFloors.Length; i++)
-        {
-            if(constantFloors[i].floorLevel == floorLevel)
-            {
-                mapSlot = constantFloors[i].mapSlot;
-                return true;
-            }
-        }
-
-        mapSlot = null;
-        return false;
-
-    }
 
     public MapSlot RandomSlot(int floorLevel){
 
@@ -49,7 +36,7 @@ public class SpawningContainer : ScriptableObject
             randomValue -= availableSlots[i].spawnOdds;
 
             if(randomValue <= 0)
-                return availableSlots[i].slots;
+                return availableSlots[i].slot;
         }
 
         Debug.LogError("No mapslot found!");
@@ -65,7 +52,7 @@ public class SpawningContainer : ScriptableObject
 
         for (int i = 0; i < Slots.Length; i++)
         {
-            if(Slots[i].unlockLevel <= floorLevel)
+            if(Slots[i].unlockLevel <= floorLevel && MapSlotIsPremiited(Slots[i].slot, notPremitted, floorLevel))
                 temp.Add(Slots[i]);
         }
 
@@ -73,13 +60,38 @@ public class SpawningContainer : ScriptableObject
             Debug.LogError("No available slots");
 
         return temp.ToArray();
+    }
 
+        bool TryGetConstantFloor(FloorInfo[] floorInfo,int floorLevel,out MapSlot mapSlot){
+
+        for (int i = 0; i < floorInfo.Length; i++)
+        {
+            if(floorInfo[i].floorLevel == floorLevel)
+            {
+                mapSlot = floorInfo[i].mapSlot;
+                return true;
+            }
+        }
+
+        mapSlot = null;
+        return false;
+
+    }
+
+    bool MapSlotIsPremiited( MapSlot mapSlot,FloorInfo[] nonPremittedList, int floorLevel){
+        for (int i = 0; i < nonPremittedList.Length; i++)
+        {
+            if(nonPremittedList[i].mapSlot == mapSlot && nonPremittedList[i].floorLevel == floorLevel)
+            return false;
+        }
+
+        return true;
     }
 }
 
 [System.Serializable]
 
-public class ConstantFloor{
+public class FloorInfo{
     public int floorLevel = 0;
     public MapSlot mapSlot;
 }
@@ -91,6 +103,6 @@ public float spawnOdds = 1;
 
 public int unlockLevel = 0;
 
-public MapSlot slots;
+public MapSlot slot;
 
 }
