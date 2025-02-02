@@ -22,8 +22,6 @@ public class MapGeneration : MonoBehaviour
 
     [Header("Noder properties")]
 
-    public MapSlot tresure;
-
     public SpawningContainer spawningContainer;
 
     #endregion // Serlized variables
