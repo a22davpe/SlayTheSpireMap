@@ -54,11 +54,13 @@ public class MapGeneration : MonoBehaviour
         Generate();
     }
 
+    /// <summary>
+    /// Generates a new map,
+    /// deleting the old one
+    /// </summary>
     public void Generate()
     {
         //https://steamcommunity.com/sharedfiles/filedetails/?id=2830078257 
-
-        //container.GetMapSlot();
 
         ResetValues(out int mapLength);
 
@@ -71,6 +73,10 @@ public class MapGeneration : MonoBehaviour
         PlaceNodes();
     }
 
+    /// <summary>
+    /// Clears all map related lists and sets a new map length
+    /// </summary>
+    /// <param name="mapLength"></param>
     private void ResetValues(out int mapLength)
     {
         mapLength = UnityEngine.Random.Range(minMapLength, maxMapLength + 1);
@@ -127,9 +133,8 @@ public class MapGeneration : MonoBehaviour
         }
 
         if(paintRoads)
-        {
             PaintRoad( roadIndex, points);
-        }
+        
     }
 
     private void PaintRoad(int roadIndex, int2[] points)
@@ -160,13 +165,14 @@ public class MapGeneration : MonoBehaviour
 
     int2 GetNewRoadSegmentPosition(int2 currrentPosition){
 
+        //If no new ways found, just go fowards
         if(repitions > 6)
             return currrentPosition + new int2(0,1);
-
         repitions ++;
+
         int2 newPosition = new int2(Mathf.Clamp( currrentPosition.x + UnityEngine.Random.Range(-1,2), 0,maxWidth-1), currrentPosition.y+1);
 
-       if(roadSegments.Contains( new RoadSegment(currrentPosition, newPosition)))
+       if(roadSegments.Contains(new RoadSegment(currrentPosition, newPosition)))
             return GetNewRoadSegmentPosition(currrentPosition);
 
         switch ( newPosition.x - currrentPosition.x)
@@ -216,20 +222,15 @@ public class MapGeneration : MonoBehaviour
 
     void PlaceNodes(){
 
-        foreach (int2 node in nodes)
+        foreach (int2 nodeIndex
+         in nodes)
         {
-            MapSlot slot = GetNode(node);
+            MapNode node = spawningContainer.GetMapNode(nodeIndex);
 
-            if(slot)
-                Instantiate(slot, m_Map[node.x,node.y], Quaternion.identity, transform);
+            if(node) Instantiate(node, m_Map[nodeIndex.x,nodeIndex.y], Quaternion.identity, transform);
+            else Debug.LogError($"no node found for index: {nodeIndex}");
 
         }
-    }
-
-    MapSlot GetNode(int2 index){
-
-        return spawningContainer.GetMapSlot(index);
-        
     }
 
     #endregion // Node Placement

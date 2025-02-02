@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class MapSlot : MonoBehaviour
+public class MapNode : MonoBehaviour
 {
     public GameObject visual;
 

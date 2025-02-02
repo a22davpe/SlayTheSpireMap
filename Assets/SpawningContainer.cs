@@ -11,49 +11,49 @@ using Unity.VisualScripting;
 [Serializable]
 public class SpawningContainer : ScriptableObject
 {
-    public Slot[] Slots;
+    public Node[] nodes;
 
     public FloorInfo[] constantFloors;
 
     public FloorInfo[] notPremitted;
 
-    public MapSlot GetMapSlot(int2 index){
+    public MapNode GetMapNode(int2 index){
 
-        if(TryGetConstantFloor(constantFloors, index.y, out MapSlot mapSlot))
+        if(TryGetConstantFloor(constantFloors, index.y, out MapNode mapSlot))
             return mapSlot;
 
         return RandomSlot(index.y);
     }
 
 
-    public MapSlot RandomSlot(int floorLevel){
+    public MapNode RandomSlot(int floorLevel){
 
-        Slot[] availableSlots = GetAvailableMapSlots(floorLevel);
-        float randomValue = UnityEngine.Random.Range(0, TotalOdds(availableSlots));
+        Node[] availableNodes = GetAvailableMapNodes(floorLevel);
+        float randomValue = UnityEngine.Random.Range(0, TotalOdds(availableNodes));
 
-        for (int i = 0; i < availableSlots.Length; i++)
+        for (int i = 0; i < availableNodes.Length; i++)
         {
-            randomValue -= availableSlots[i].spawnOdds;
+            randomValue -= availableNodes[i].spawnOdds;
 
             if(randomValue <= 0)
-                return availableSlots[i].slot;
+                return availableNodes[i].node;
         }
 
         Debug.LogError("No mapslot found!");
 
-        return new MapSlot();
+        return new MapNode();
     }
 
-    float TotalOdds(Slot[] slots) => slots.Sum(t => t.spawnOdds);
+    float TotalOdds(Node[] nodes) => nodes.Sum(t => t.spawnOdds);
 
-    Slot[] GetAvailableMapSlots(int floorLevel){
+    Node[] GetAvailableMapNodes(int floorLevel){
 
-        List<Slot> temp = new List<Slot>();
+        List<Node> temp = new List<Node>();
 
-        for (int i = 0; i < Slots.Length; i++)
+        for (int i = 0; i < nodes.Length; i++)
         {
-            if(Slots[i].unlockLevel <= floorLevel && MapSlotIsPremiited(Slots[i].slot, notPremitted, floorLevel))
-                temp.Add(Slots[i]);
+            if(nodes[i].unlockLevel <= floorLevel && MapNodeIsPremitted(nodes[i].node, notPremitted, floorLevel))
+                temp.Add(nodes[i]);
         }
 
         if(temp.Count == 0)
@@ -62,13 +62,13 @@ public class SpawningContainer : ScriptableObject
         return temp.ToArray();
     }
 
-        bool TryGetConstantFloor(FloorInfo[] floorInfo,int floorLevel,out MapSlot mapSlot){
+        bool TryGetConstantFloor(FloorInfo[] floorInfo,int floorLevel,out MapNode mapSlot){
 
         for (int i = 0; i < floorInfo.Length; i++)
         {
             if(floorInfo[i].floorLevel == floorLevel)
             {
-                mapSlot = floorInfo[i].mapSlot;
+                mapSlot = floorInfo[i].mapNode;
                 return true;
             }
         }
@@ -78,10 +78,17 @@ public class SpawningContainer : ScriptableObject
 
     }
 
-    bool MapSlotIsPremiited( MapSlot mapSlot,FloorInfo[] nonPremittedList, int floorLevel){
+    /// <summary>
+    /// Checks if the node is premitted based on an non premitted node list given the floor level
+    /// </summary>
+    /// <param name="mapSlot"></param>
+    /// <param name="nonPremittedList"></param>
+    /// <param name="floorLevel"></param>
+    /// <returns></returns>
+    bool MapNodeIsPremitted( MapNode mapSlot,FloorInfo[] nonPremittedList, int floorLevel){
         for (int i = 0; i < nonPremittedList.Length; i++)
         {
-            if(nonPremittedList[i].mapSlot == mapSlot && nonPremittedList[i].floorLevel == floorLevel)
+            if(nonPremittedList[i].mapNode == mapSlot && nonPremittedList[i].floorLevel == floorLevel)
             return false;
         }
 
@@ -93,16 +100,16 @@ public class SpawningContainer : ScriptableObject
 
 public class FloorInfo{
     public int floorLevel = 0;
-    public MapSlot mapSlot;
+    public MapNode mapNode;
 }
 
 [System.Serializable]
-public class Slot{
+public class Node{
 
 public float spawnOdds = 1;
 
 public int unlockLevel = 0;
 
-public MapSlot slot;
+public MapNode node;
 
 }
