@@ -8,20 +8,23 @@ public class MapGeneration : MonoBehaviour
 
     public bool GenerateNewMap;
 
-    [Header("Map properties")]
+    [Header("Road properties")]
     public int maxMapLength;
     public int minMapLength;
     public int maxWidth = 5;
 
     public int pathAmount = 6;
 
-    public MapSlot ms;
-
     [Space()]
     public bool paintRoads;
 
     public LineRenderer lineRendererPrefab;
 
+    [Header("Noder properties")]
+
+    public MapSlot tresure;
+
+    public SpawningContainer spawningContainer;
 
     #endregion // Serlized variables
 
@@ -53,36 +56,43 @@ public class MapGeneration : MonoBehaviour
         Generate();
     }
 
-    public void Generate(){
-
+    public void Generate()
+    {
         //https://steamcommunity.com/sharedfiles/filedetails/?id=2830078257 
 
         //container.GetMapSlot();
 
-        int mapLength = UnityEngine.Random.Range(minMapLength, maxMapLength+1);
+        ResetValues(out int mapLength);
+
+        //Places down everyRoad
+        for (int i = 0; i < pathAmount; i++)
+        {
+            MakeRoad(mapLength, i);
+        }
+
+        PlaceNodes();
+    }
+
+    private void ResetValues(out int mapLength)
+    {
+        mapLength = UnityEngine.Random.Range(minMapLength, maxMapLength + 1);
 
         //Resets all values
-        m_Map = new Vector2[maxWidth,mapLength];
+        m_Map = new Vector2[maxWidth, mapLength];
 
         for (int x = 0; x < m_Map.GetLength(0); x++)
         {
             for (int y = 0; y < m_Map.GetLength(1); y++)
             {
-                m_Map[x,y] = Vector2.down;
+                m_Map[x, y] = Vector2.down;
             }
-            
+
         }
 
         roadSegments = new List<RoadSegment>();
         nodes = new List<int2>();
-
-        //Places down everyRoad
-        for (int i = 0; i < pathAmount; i++)
-        {
-            MakeRoad(mapLength,i);
-        }
     }
-    
+
     #region Road Generation
     void MakeRoad(int mapLength, int roadIndex){
 
@@ -152,7 +162,7 @@ public class MapGeneration : MonoBehaviour
 
     int2 GetNewRoadSegmentPosition(int2 currrentPosition){
 
-        if(repitions > 3)
+        if(repitions > 6)
             return currrentPosition + new int2(0,1);
 
         repitions ++;
@@ -206,7 +216,23 @@ public class MapGeneration : MonoBehaviour
 
     #region Node Placement
 
+    void PlaceNodes(){
 
+        foreach (int2 node in nodes)
+        {
+            MapSlot slot = GetNode(node);
+
+            if(slot)
+                Instantiate(slot, m_Map[node.x,node.y], Quaternion.identity, transform);
+
+        }
+    }
+
+    MapSlot GetNode(int2 index){
+
+        return spawningContainer.GetMapSlot(index);
+        
+    }
 
     #endregion // Node Placement
 }

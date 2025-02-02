@@ -8,9 +8,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1377620613929439410, guid: ace3e6ef27aa39040bfd15d08ce9eeae, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1377620613929439410, guid: ace3e6ef27aa39040bfd15d08ce9eeae, type: 3}
+      propertyPath: m_Color.g
+      value: 0.024237156
+      objectReference: {fileID: 0}
+    - target: {fileID: 1377620613929439410, guid: ace3e6ef27aa39040bfd15d08ce9eeae, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4393110668900763046, guid: ace3e6ef27aa39040bfd15d08ce9eeae, type: 3}
       propertyPath: m_Name
-      value: MapSlot
+      value: Treasure
       objectReference: {fileID: 0}
     - target: {fileID: 4546153495175452344, guid: ace3e6ef27aa39040bfd15d08ce9eeae, type: 3}
       propertyPath: m_LocalPosition.x
