@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 846536505167191630}
   - component: {fileID: 1377620613929439410}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.106259204}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4546153495175452344}
@@ -94,7 +94,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4546153495175452344}
   - component: {fileID: 7571234752790181717}
-  m_Layer: 0
+  - component: {fileID: 2502409047596920975}
+  m_Layer: 5
   m_Name: MapSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,6 +130,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b210a06bbeaa0e42ab0e51f948b55a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visual: {fileID: 0}
-  pos: {x: 0, y: 0}
-  outRoads: []
+--- !u!58 &2502409047596920975
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4393110668900763046}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.175

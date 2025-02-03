@@ -17,16 +17,16 @@ public class SpawningContainer : ScriptableObject
 
     public FloorInfo[] notPremitted;
 
-    public MapNode GetMapNode(int2 index){
+    public MapNodeBehaviour GetMapNode(int2 index){
 
-        if(TryGetConstantFloor(constantFloors, index.y, out MapNode mapSlot))
+        if(TryGetConstantFloor(constantFloors, index.y, out MapNodeBehaviour mapSlot))
             return mapSlot;
 
         return RandomSlot(index.y);
     }
 
 
-    public MapNode RandomSlot(int floorLevel){
+    public MapNodeBehaviour RandomSlot(int floorLevel){
 
         Node[] availableNodes = GetAvailableMapNodes(floorLevel);
         float randomValue = UnityEngine.Random.Range(0, TotalOdds(availableNodes));
@@ -41,7 +41,7 @@ public class SpawningContainer : ScriptableObject
 
         Debug.LogError("No mapslot found!");
 
-        return new MapNode();
+        return new MapNodeBehaviour();
     }
 
     float TotalOdds(Node[] nodes) => nodes.Sum(t => t.spawnOdds);
@@ -62,7 +62,7 @@ public class SpawningContainer : ScriptableObject
         return temp.ToArray();
     }
 
-        bool TryGetConstantFloor(FloorInfo[] floorInfo,int floorLevel,out MapNode mapSlot){
+        bool TryGetConstantFloor(FloorInfo[] floorInfo,int floorLevel,out MapNodeBehaviour mapSlot){
 
         for (int i = 0; i < floorInfo.Length; i++)
         {
@@ -85,7 +85,7 @@ public class SpawningContainer : ScriptableObject
     /// <param name="nonPremittedList"></param>
     /// <param name="floorLevel"></param>
     /// <returns></returns>
-    bool MapNodeIsPremitted( MapNode mapSlot,FloorInfo[] nonPremittedList, int floorLevel){
+    bool MapNodeIsPremitted( MapNodeBehaviour mapSlot,FloorInfo[] nonPremittedList, int floorLevel){
         for (int i = 0; i < nonPremittedList.Length; i++)
         {
             if(nonPremittedList[i].mapNode == mapSlot && nonPremittedList[i].floorLevel == floorLevel)
@@ -100,7 +100,7 @@ public class SpawningContainer : ScriptableObject
 
 public class FloorInfo{
     public int floorLevel = 0;
-    public MapNode mapNode;
+    public MapNodeBehaviour mapNode;
 }
 
 [System.Serializable]
@@ -110,6 +110,6 @@ public float spawnOdds = 1;
 
 public int unlockLevel = 0;
 
-public MapNode node;
+public MapNodeBehaviour node;
 
 }

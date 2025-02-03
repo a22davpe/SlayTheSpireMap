@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class MapNode : MonoBehaviour
+public class MapNodeBehaviour : MonoBehaviour, IPointerClickHandler
 {
-    public GameObject visual;
 
-    public Vector2 pos;
+    public NodeInfo nodeInfo;
 
-    public List<Vector2> outRoads;
-
-    public bool HasCrossingRoad(int roadXDirection){
-        return outRoads.Contains(new Vector2(-roadXDirection,1) + pos);
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log($"Nodes in: {nodeInfo.RoadsIn.Count}");
+        Debug.Log($"Nodes out: {nodeInfo.RoadsOut.Count}");
     }
 }
 
@@ -23,12 +23,11 @@ public class NodeInfo{
 
         this.position = position;
         this.index = index;
-
     }
 
-    public List<int2> RoadsIn;
+    public List<int2> RoadsIn = new List<int2>();
 
-    public List<int2> RoadsOut;
+    public List<int2> RoadsOut = new List<int2>();
 
     public int2 index;
 
