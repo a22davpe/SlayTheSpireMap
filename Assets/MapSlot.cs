@@ -15,3 +15,23 @@ public class MapNode : MonoBehaviour
         return outRoads.Contains(new Vector2(-roadXDirection,1) + pos);
     }
 }
+
+
+public class NodeInfo{
+
+    public NodeInfo(int2 index, Vector2 position){
+
+        this.position = position;
+        this.index = index;
+
+    }
+
+    public List<int2> RoadsIn;
+
+    public List<int2> RoadsOut;
+
+    public int2 index;
+
+    public Vector2 position;
+
+}
