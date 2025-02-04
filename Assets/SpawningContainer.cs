@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.Mathematics;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
+using UnityEditor;
 
 [CreateAssetMenu]
 [Serializable]
@@ -98,18 +99,73 @@ public class SpawningContainer : ScriptableObject
 
 [System.Serializable]
 
-public class FloorInfo{
+public class FloorInfo
+{
     public int floorLevel = 0;
     public MapNodeBehaviour mapNode;
 }
 
 [System.Serializable]
-public class Node{
+public class Node
+{
 
-public float spawnOdds = 1;
+    public float spawnOdds = 1;
 
-public int unlockLevel = 0;
+    public int unlockLevel = 0;
 
-public MapNodeBehaviour node;
+    public MapNodeBehaviour node;
 
 }
+
+
+[CustomEditor (typeof(SpawningContainer)), CanEditMultipleObjects]
+public class SpawnContainerEditor : Editor
+{
+    SpawningContainer container;
+    private void OnEnable()
+    {
+        container = target as SpawningContainer;
+    }
+
+    [SerializeField] bool showNodes;
+
+    public override void OnInspectorGUI()
+    {
+        EditorGUI.BeginChangeCheck();
+
+        base.OnInspectorGUI();
+
+        //__________Nodes_______________
+        showNodes = EditorGUILayout.Foldout(showNodes, "Nodes");
+
+        if (showNodes)
+        {
+            for (global::System.Int32 i = 0; i < container.nodes.Length; i++)
+            {
+                
+            }
+        }
+
+        //______Constant floors_________
+
+
+        //_______Not Premitted__________
+
+
+        //_______Record Things__________
+
+        Undo.RecordObject(container, container.name);
+
+        if(EditorGUI.EndChangeCheck())
+        {
+            serializedObject.ApplyModifiedProperties();
+
+            serializedObject.Update();
+
+            EditorUtility.SetDirty(container);
+        }
+    }
+
+
+}
+
