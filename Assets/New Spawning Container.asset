@@ -21,7 +21,7 @@ MonoBehaviour:
     node: {fileID: 8598199084098841335, guid: 52d44a78c1bbe1a40bf07df60dcf4136, type: 3}
   - spawnOdds: 5
     unlockLevel: 0
-    node: {fileID: 8598199084098841335, guid: bd408b7d91902754aa936f4a21c6eb9c, type: 3}
+    node: {fileID: 0}
   - spawnOdds: 45
     unlockLevel: 0
     node: {fileID: 8598199084098841335, guid: 199733b69b1873c49ad73c7e9cac5ac5, type: 3}
@@ -29,8 +29,8 @@ MonoBehaviour:
     unlockLevel: 6
     node: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
   constantFloors:
-  - floorLevel: 15
-    mapNode: {fileID: 8598199084098841335, guid: a1ab3bad6bbf23f458c107ef33fb2fd9, type: 3}
+  - floorLevel: 18
+    mapNode: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
   - floorLevel: 6
     mapNode: {fileID: 8598199084098841335, guid: a1ab3bad6bbf23f458c107ef33fb2fd9, type: 3}
   - floorLevel: 19
