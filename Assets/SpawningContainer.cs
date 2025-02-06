@@ -127,13 +127,11 @@ public class Node
 public class SpawnContainerEditor : Editor
 {
     SpawningContainer container;
+
+    GUIStyle titleStyle;
     private void OnEnable()
     {
         container = target as SpawningContainer;
-
-        GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
-
-        titleStyle.richText = true;
     }
 
     [SerializeField] bool showNodes;
@@ -144,6 +142,9 @@ public class SpawnContainerEditor : Editor
     {
         EditorGUI.BeginChangeCheck();
 
+        titleStyle = new GUIStyle(GUI.skin.label);
+
+        titleStyle.richText = true;
 
         //__________Nodes_______________
         showNodes = EditorGUILayout.Foldout(showNodes, "Nodes");
@@ -157,12 +158,8 @@ public class SpawnContainerEditor : Editor
                 Node node = container.nodes[i];
 
                 if (container.nodes[i].node)
-                {
-                    Debug.Log(GetColorByNodeType(node.node.nodeType));
-
-
-                    EditorGUILayout.LabelField($"<color=#{GetColorByNodeType(node.node.nodeType).ToHexString()}>{node.node.name}</color>", uIStyle);
-                }
+                    EditorGUILayout.LabelField($"<color=#{GetColorByNodeType(node.node.nodeType).ToHexString()}>{node.node.name}</color>", titleStyle);
+                
                 else
                     EditorGUILayout.LabelField("No node avaliable");
 
