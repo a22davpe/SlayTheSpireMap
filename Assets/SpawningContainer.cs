@@ -130,6 +130,10 @@ public class SpawnContainerEditor : Editor
     private void OnEnable()
     {
         container = target as SpawningContainer;
+
+        GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
+
+        titleStyle.richText = true;
     }
 
     [SerializeField] bool showNodes;
@@ -140,6 +144,7 @@ public class SpawnContainerEditor : Editor
     {
         EditorGUI.BeginChangeCheck();
 
+
         //__________Nodes_______________
         showNodes = EditorGUILayout.Foldout(showNodes, "Nodes");
 
@@ -149,15 +154,22 @@ public class SpawnContainerEditor : Editor
             {
                 EditorGUILayout.LabelField("----------------------------");
 
+                Node node = container.nodes[i];
+
                 if (container.nodes[i].node)
-                    EditorGUILayout.LabelField(container.nodes[i].node.name);
+                {
+                    Debug.Log(GetColorByNodeType(node.node.nodeType));
+
+
+                    EditorGUILayout.LabelField($"<color=#{GetColorByNodeType(node.node.nodeType).ToHexString()}>{node.node.name}</color>", uIStyle);
+                }
                 else
                     EditorGUILayout.LabelField("No node avaliable");
 
-                container.nodes[i].spawnOdds = EditorGUILayout.FloatField("SpawnOdds", container.nodes[i].spawnOdds);
-                container.nodes[i].unlockLevel = EditorGUILayout.IntField("Unlock level", container.nodes[i].unlockLevel);
+                container.nodes[i].spawnOdds = EditorGUILayout.FloatField("SpawnOdds", node.spawnOdds);
+                container.nodes[i].unlockLevel = EditorGUILayout.IntField("Unlock level", node.unlockLevel);
 
-                container.nodes[i].node = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", container.nodes[i].node, typeof(MapNodeBehaviour), true);
+                container.nodes[i].node = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", node.node, typeof(MapNodeBehaviour), true);
 
                 if (GUILayout.Button("Remove"))
                 {
@@ -175,70 +187,13 @@ public class SpawnContainerEditor : Editor
         BetterSpace(2);
 
         //______Constant floors_________
-
-        showConstantFloors = EditorGUILayout.Foldout(showConstantFloors, "Constant Floors");
-
-        if (showConstantFloors)
-        {
-            for (global::System.Int32 i = 0; i < container.constantFloors.Count; i++)
-            {
-                EditorGUILayout.LabelField("----------------------------");
-
-                if (container.nodes[i].node)
-                    EditorGUILayout.LabelField(container.constantFloors[i].mapNode.name);
-                else
-                    EditorGUILayout.LabelField("No node avaliable");
-
-                container.constantFloors[i].floorLevel = EditorGUILayout.IntField("Floor level", container.constantFloors[i].floorLevel);
-
-                container.constantFloors[i].mapNode = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", container.constantFloors[i].mapNode, typeof(MapNodeBehaviour), true);
-
-                if (GUILayout.Button("Remove"))
-                {
-                    container.constantFloors.RemoveAt(i);
-                }
-            }
-
-            EditorGUILayout.LabelField("----------------------------");
-
-            if (GUILayout.Button("Add Node"))
-                container.constantFloors.Add(new FloorInfo());
-            EditorGUILayout.LabelField("----------------------------");
-        }
+        DrawFloorInfoList("Constant Floors", ref showConstantFloors, container.constantFloors);
 
         BetterSpace(2);
 
         //_______Not Premitted__________
+        DrawFloorInfoList("Non premitted nodes", ref showNonPremitted, container.notPremitted);
 
-        showNonPremitted = EditorGUILayout.Foldout(showNonPremitted, "Not Premitted Node");
-
-        if (showNonPremitted)
-        {
-            for (global::System.Int32 i = 0; i < container.notPremitted.Count; i++)
-            {
-                EditorGUILayout.LabelField("----------------------------");
-
-                if (container.nodes[i].node)
-                    EditorGUILayout.LabelField(container.notPremitted[i].mapNode.name);
-                else
-                    EditorGUILayout.LabelField("No node avaliable");
-
-                container.constantFloors[i].floorLevel = EditorGUILayout.IntField("Floor level", container.notPremitted[i].floorLevel);
-
-                container.constantFloors[i].mapNode = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", container.notPremitted[i].mapNode, typeof(MapNodeBehaviour), true);
-
-                if (GUILayout.Button("Remove"))
-                {
-                    container.constantFloors.RemoveAt(i);
-                }
-            }
-
-            EditorGUILayout.LabelField("----------------------------");
-
-            if (GUILayout.Button("Add Node"))
-                container.constantFloors.Add(new FloorInfo());
-            EditorGUILayout.LabelField("----------------------------");
-        }
         //_______Record Things__________
 
         Undo.RecordObject(container, container.name);
@@ -254,6 +209,60 @@ public class SpawnContainerEditor : Editor
 
     }
 
+    private void DrawFloorInfoList(string name ,ref bool show, List<FloorInfo> information)
+    {
+        show = EditorGUILayout.Foldout(show, name);
+
+        if (show)
+        {
+            for (global::System.Int32 i = 0; i < information.Count; i++)
+            {
+                EditorGUILayout.LabelField("----------------------------");
+
+                if (information[i].mapNode)
+                    EditorGUILayout.LabelField(information[i].mapNode.name);
+                else
+                    EditorGUILayout.LabelField("No node avaliable");
+
+                information[i].floorLevel = EditorGUILayout.IntField("Floor level", information[i].floorLevel);
+
+                information[i].mapNode = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", information[i].mapNode, typeof(MapNodeBehaviour), true);
+
+                if (GUILayout.Button("Remove"))
+                {
+                    information.RemoveAt(i);
+                }
+            }
+            EditorGUILayout.LabelField("----------------------------");
+
+            if (GUILayout.Button("Add Node"))
+                information.Add(new FloorInfo());
+            EditorGUILayout.LabelField("----------------------------");
+        }
+    }
+
+    Color GetColorByNodeType(NodeType type)
+    {
+        switch (type)
+        {
+            case NodeType.Elite:
+                return Color.red;
+            case NodeType.Event:
+                return Color.white;
+            case NodeType.Market:
+                return Color.yellow;
+            case NodeType.Monster:
+                return Color.green;
+            case NodeType.RestSite:
+                return new Color(0.69f,0.09f,0.91f) ;
+            case NodeType.Treasure:
+                return Color.blue;
+            default:
+                Debug.LogError("No color set for this type", this);
+                return Color.gray;
+        }
+    }
+
 
     void BetterSpace(int amount)
     {
@@ -266,7 +275,7 @@ public class SpawnContainerEditor : Editor
 }
 
 
-public enum NodeTypes
+public enum NodeType
 {
     Elite,
     Event,

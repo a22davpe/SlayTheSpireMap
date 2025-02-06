@@ -21,7 +21,7 @@ MonoBehaviour:
     node: {fileID: 8598199084098841335, guid: 52d44a78c1bbe1a40bf07df60dcf4136, type: 3}
   - spawnOdds: 5
     unlockLevel: 0
-    node: {fileID: 0}
+    node: {fileID: 8598199084098841335, guid: bd408b7d91902754aa936f4a21c6eb9c, type: 3}
   - spawnOdds: 45
     unlockLevel: 0
     node: {fileID: 8598199084098841335, guid: 199733b69b1873c49ad73c7e9cac5ac5, type: 3}
@@ -38,3 +38,5 @@ MonoBehaviour:
   notPremitted:
   - floorLevel: 18
     mapNode: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
+  - floorLevel: 0
+    mapNode: {fileID: 0}

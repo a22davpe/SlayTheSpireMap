@@ -9,6 +9,8 @@ public class MapNodeBehaviour : MonoBehaviour, IPointerClickHandler
 
     public NodeInfo nodeInfo;
 
+    public NodeType nodeType;
+
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log($"Nodes in: {nodeInfo.RoadsIn.Count}");
