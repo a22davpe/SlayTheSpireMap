@@ -29,8 +29,8 @@ MonoBehaviour:
     unlockLevel: 6
     node: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
   constantFloors:
-  - floorLevel: 18
-    mapNode: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
+  - floorLevel: 14
+    mapNode: {fileID: 8598199084098841335, guid: a1ab3bad6bbf23f458c107ef33fb2fd9, type: 3}
   - floorLevel: 6
     mapNode: {fileID: 8598199084098841335, guid: a1ab3bad6bbf23f458c107ef33fb2fd9, type: 3}
   - floorLevel: 19
