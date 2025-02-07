@@ -267,18 +267,3 @@ public class MapGenerator : MonoBehaviour
 }
 
 
-[CustomEditor(typeof(MapGenerator)), CanEditMultipleObjects]
-public class MapGeneratorEditor : Editor
-{
-
-
-    public override void OnInspectorGUI()
-    {
-        if(GUILayout.Button(""))
-
-        base.OnInspectorGUI();
-
-    }
-}
-
-
