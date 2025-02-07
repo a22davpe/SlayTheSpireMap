@@ -100,6 +100,10 @@ public class SpawningContainer : ScriptableObject
 
         return true;
     }
+
+    public bool showNodes;
+    public bool showConstantFloors;
+    public bool showNonPremitted;
 }
 
 [System.Serializable]
@@ -134,10 +138,6 @@ public class SpawnContainerEditor : Editor
         container = target as SpawningContainer;
     }
 
-    [SerializeField] bool showNodes;
-    [SerializeField] bool showConstantFloors;
-    [SerializeField] bool showNonPremitted;
-
     public override void OnInspectorGUI()
     {
         EditorGUI.BeginChangeCheck();
@@ -147,9 +147,9 @@ public class SpawnContainerEditor : Editor
         titleStyle.richText = true;
 
         //__________Nodes_______________
-        showNodes = EditorGUILayout.Foldout(showNodes, "Nodes");
+        container.showNodes = EditorGUILayout.Foldout(container.showNodes, "Nodes");
 
-        if (showNodes)
+        if (container.showNodes)
         {
             for (global::System.Int32 i = 0; i < container.nodes.Count; i++)
             {
@@ -184,12 +184,12 @@ public class SpawnContainerEditor : Editor
         BetterSpace(2);
 
         //______Constant floors_________
-        DrawFloorInfoList("Constant Floors", ref showConstantFloors, container.constantFloors);
+        DrawFloorInfoList("Constant Floors", ref container.showConstantFloors, container.constantFloors);
 
         BetterSpace(2);
 
         //_______Not Premitted__________
-        DrawFloorInfoList("Non premitted nodes", ref showNonPremitted, container.notPremitted);
+        DrawFloorInfoList("Non premitted nodes", ref container.showNonPremitted, container.notPremitted);
 
         //_______Record Things__________
 

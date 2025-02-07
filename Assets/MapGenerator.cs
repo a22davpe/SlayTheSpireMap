@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
+using UnityEditor;
+using UnityEditor.TerrainTools;
 using UnityEngine;
-public class MapGeneration : MonoBehaviour
+public class MapGenerator : MonoBehaviour
 {
     /* TODO
     
@@ -45,8 +47,9 @@ public class MapGeneration : MonoBehaviour
     #endregion // Nonserlized variables
 
 
-    private void Update() {
-        if(GenerateNewMap)
+    private void Update()
+    {
+        if (GenerateNewMap)
         {
             GenerateNewMap = false;
 
@@ -59,7 +62,8 @@ public class MapGeneration : MonoBehaviour
         }
     }
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         Generate();
     }
 
@@ -98,7 +102,8 @@ public class MapGeneration : MonoBehaviour
     }
 
     #region Road Generation
-    void MakeRoad(int mapLength, int roadIndex){
+    void MakeRoad(int mapLength, int roadIndex)
+    {
 
         //Each point on the road
         int2[] points = new int2[mapLength];
@@ -113,39 +118,39 @@ public class MapGeneration : MonoBehaviour
 
         Vector2 transformPos = transform.position;
 
-        nodeDictionary.TryAdd(points[0], new NodeInfo(startIndex, ShuffelPosition(startIndex) * distanceBetweenNodes+ transformPos));
-        
-        
+        nodeDictionary.TryAdd(points[0], new NodeInfo(startIndex, ShuffelPosition(startIndex) * distanceBetweenNodes + transformPos));
+
+
         for (int i = 1; i < mapLength; i++)
         {
             repitions = 0;
-            int2 newIndex = GetNewRoadSegmentPosition(points[i-1]);
-            
+            int2 newIndex = GetNewRoadSegmentPosition(points[i - 1]);
+
             points[i] = newIndex;
 
-            nodeDictionary.TryAdd(newIndex, new NodeInfo(newIndex, ShuffelPosition(newIndex)* distanceBetweenNodes+ transformPos));
+            nodeDictionary.TryAdd(newIndex, new NodeInfo(newIndex, ShuffelPosition(newIndex) * distanceBetweenNodes + transformPos));
 
-            nodeDictionary[newIndex].RoadsIn.Add(points[i-1]);
+            nodeDictionary[newIndex].RoadsIn.Add(points[i - 1]);
 
-            nodeDictionary[points[i-1]].RoadsOut.Add(newIndex);
-            
-            roadSegments.Add(new RoadSegment(points[i-1], points[i]));
+            nodeDictionary[points[i - 1]].RoadsOut.Add(newIndex);
+
+            roadSegments.Add(new RoadSegment(points[i - 1], points[i]));
         }
-/*
-        foreach (var segment in roadSegments)
-        {
-            int2 int2 = segment.EndPoint;
-            
-            if(m_Map[int2.x,int2.y] == Vector2.down)
-            {
-                m_Map[int2.x,int2.y] = new Vector2(int2.x + UnityEngine.Random.Range(-0.3f,0.3f),int2.y + UnityEngine.Random.Range(-0.3f,0.3f));
-            }
+        /*
+                foreach (var segment in roadSegments)
+                {
+                    int2 int2 = segment.EndPoint;
 
-        }*/
+                    if(m_Map[int2.x,int2.y] == Vector2.down)
+                    {
+                        m_Map[int2.x,int2.y] = new Vector2(int2.x + UnityEngine.Random.Range(-0.3f,0.3f),int2.y + UnityEngine.Random.Range(-0.3f,0.3f));
+                    }
 
-        if(paintRoads)
-            PaintRoad( roadIndex, points);
-        
+                }*/
+
+        if (paintRoads)
+            PaintRoad(roadIndex, points);
+
     }
 
     private void PaintRoad(int roadIndex, int2[] points)
@@ -171,41 +176,42 @@ public class MapGeneration : MonoBehaviour
         roadRenderer.SetPositions(roadPoints);
     }
 
-    Vector2 ShuffelPosition(int2 index) => new Vector2(index.x + UnityEngine.Random.Range(-shuffleStrength,shuffleStrength), index.y + UnityEngine.Random.Range(-shuffleStrength,shuffleStrength));
+    Vector2 ShuffelPosition(int2 index) => new Vector2(index.x + UnityEngine.Random.Range(-shuffleStrength, shuffleStrength), index.y + UnityEngine.Random.Range(-shuffleStrength, shuffleStrength));
 
     // counter to stop overflows
     int repitions;
 
-    int2 GetNewRoadSegmentPosition(int2 currrentPosition){
+    int2 GetNewRoadSegmentPosition(int2 currrentPosition)
+    {
 
         //If no new ways found, just go fowards
-        if(repitions > 6)
-            return currrentPosition + new int2(0,1);
-        repitions ++;
+        if (repitions > 6)
+            return currrentPosition + new int2(0, 1);
+        repitions++;
 
-        int2 newPosition = new int2(Mathf.Clamp( currrentPosition.x + UnityEngine.Random.Range(-1,2), 0,maxWidth-1), currrentPosition.y+1);
+        int2 newPosition = new int2(Mathf.Clamp(currrentPosition.x + UnityEngine.Random.Range(-1, 2), 0, maxWidth - 1), currrentPosition.y + 1);
 
-       if(roadSegments.Contains(new RoadSegment(currrentPosition, newPosition)))
+        if (roadSegments.Contains(new RoadSegment(currrentPosition, newPosition)))
             return GetNewRoadSegmentPosition(currrentPosition);
 
-        switch ( newPosition.x - currrentPosition.x)
+        switch (newPosition.x - currrentPosition.x)
         {
             case -1:
-                if(roadSegments.Contains(new RoadSegment(new int2(currrentPosition.x-1, currrentPosition.y), new int2(currrentPosition.x, currrentPosition.y+1))))
+                if (roadSegments.Contains(new RoadSegment(new int2(currrentPosition.x - 1, currrentPosition.y), new int2(currrentPosition.x, currrentPosition.y + 1))))
                     return GetNewRoadSegmentPosition(currrentPosition);
-                
+
                 return newPosition;
 
 
             case 1:
-                if(roadSegments.Contains(new RoadSegment(new int2(currrentPosition.x+1, currrentPosition.y), new int2(currrentPosition.x, currrentPosition.y+1))))
+                if (roadSegments.Contains(new RoadSegment(new int2(currrentPosition.x + 1, currrentPosition.y), new int2(currrentPosition.x, currrentPosition.y + 1))))
                     return GetNewRoadSegmentPosition(currrentPosition);
-                
+
                 return newPosition;
 
             case 0:
                 return newPosition;
-            
+
             default:
                 Debug.LogError("Faulty new position value", this);
                 return newPosition;
@@ -213,9 +219,11 @@ public class MapGeneration : MonoBehaviour
 
     }
 
-    struct RoadSegment{
+    struct RoadSegment
+    {
 
-        public RoadSegment(int2 start, int2 end){
+        public RoadSegment(int2 start, int2 end)
+        {
             m_End = end;
             m_Start = start;
         }
@@ -227,15 +235,16 @@ public class MapGeneration : MonoBehaviour
         int2 m_Start;
 
         int2 m_End;
-   }
+    }
 
-   #endregion //Road Generation
+    #endregion //Road Generation
 
     #region Node Placement
 
-    void PlaceNodes(){
+    void PlaceNodes()
+    {
 
-        foreach (KeyValuePair<int2,NodeInfo> node
+        foreach (KeyValuePair<int2, NodeInfo> node
          in nodeDictionary)
         {
 
@@ -243,18 +252,33 @@ public class MapGeneration : MonoBehaviour
 
             MapNodeBehaviour nodeType = spawningContainer.GetMapNode(nodeInfo.index);
 
-            if(nodeType){ 
+            if (nodeType)
+            {
                 MapNodeBehaviour mapNode = Instantiate(nodeType, nodeInfo.position, Quaternion.identity, transform);
 
                 mapNode.nodeInfo = nodeInfo;
 
-                }
+            }
             else Debug.LogError($"no node found for index: {nodeInfo.index}");
 
         }
     }
-
     #endregion // Node Placement
+}
+
+
+[CustomEditor(typeof(MapGenerator)), CanEditMultipleObjects]
+public class MapGeneratorEditor : Editor
+{
+
+
+    public override void OnInspectorGUI()
+    {
+        if(GUILayout.Button(""))
+
+        base.OnInspectorGUI();
+
+    }
 }
 
 
