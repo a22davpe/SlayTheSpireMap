@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.TerrainTools;
 using UnityEngine;
@@ -13,9 +14,7 @@ public class MapGenerator : MonoBehaviour
     */
 
 
-    #region Serlized variables
-
-    public bool GenerateNewMap;
+    #region Inspector variables
 
     [Header("Road properties")]
     public int maxMapLength;
@@ -36,31 +35,15 @@ public class MapGenerator : MonoBehaviour
     public float distanceBetweenNodes = 1;
     public SpawningContainer spawningContainer;
 
-    #endregion // Serlized variables
+    #endregion // Inspector variables
 
-    #region Nonserlized variables
+    #region NonInspector variables
 
     List<RoadSegment> roadSegments;
 
     [HideInInspector] public Dictionary<int2, NodeInfo> nodeDictionary;
 
-    #endregion // Nonserlized variables
-
-
-    private void Update()
-    {
-        if (GenerateNewMap)
-        {
-            GenerateNewMap = false;
-
-            foreach (Transform child in transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-            Generate();
-        }
-    }
+    #endregion // NonInspector variables
 
     private void OnEnable()
     {
@@ -73,6 +56,7 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     public void Generate()
     {
+        //Inspo
         //https://steamcommunity.com/sharedfiles/filedetails/?id=2830078257 
 
         ResetValues(out int mapLength);
@@ -113,9 +97,6 @@ public class MapGenerator : MonoBehaviour
         int2 startIndex = new int2(UnityEngine.Random.Range(0, maxWidth), 0);
         points[0] = startIndex;
 
-        //if(m_Map[startIndex.x,startIndex.y] == Vector2.down)
-        //    m_Map[startIndex.x,startIndex.y] = new Vector2(startIndex.x + UnityEngine.Random.Range(-0.3f,0.3f),startIndex.y + UnityEngine.Random.Range(-0.3f,0.3f));
-
         Vector2 transformPos = transform.position;
 
         nodeDictionary.TryAdd(points[0], new NodeInfo(startIndex, ShuffelPosition(startIndex) * distanceBetweenNodes + transformPos));
@@ -136,17 +117,6 @@ public class MapGenerator : MonoBehaviour
 
             roadSegments.Add(new RoadSegment(points[i - 1], points[i]));
         }
-        /*
-                foreach (var segment in roadSegments)
-                {
-                    int2 int2 = segment.EndPoint;
-
-                    if(m_Map[int2.x,int2.y] == Vector2.down)
-                    {
-                        m_Map[int2.x,int2.y] = new Vector2(int2.x + UnityEngine.Random.Range(-0.3f,0.3f),int2.y + UnityEngine.Random.Range(-0.3f,0.3f));
-                    }
-
-                }*/
 
         if (paintRoads)
             PaintRoad(roadIndex, points);
@@ -183,17 +153,20 @@ public class MapGenerator : MonoBehaviour
 
     int2 GetNewRoadSegmentPosition(int2 currrentPosition)
     {
-
         //If no new ways found, just go fowards
         if (repitions > 6)
             return currrentPosition + new int2(0, 1);
+
         repitions++;
 
         int2 newPosition = new int2(Mathf.Clamp(currrentPosition.x + UnityEngine.Random.Range(-1, 2), 0, maxWidth - 1), currrentPosition.y + 1);
 
+        // Check if it is a unique road
         if (roadSegments.Contains(new RoadSegment(currrentPosition, newPosition)))
             return GetNewRoadSegmentPosition(currrentPosition);
 
+
+        //Make sure that roads dont cross each other
         switch (newPosition.x - currrentPosition.x)
         {
             case -1:
@@ -201,7 +174,6 @@ public class MapGenerator : MonoBehaviour
                     return GetNewRoadSegmentPosition(currrentPosition);
 
                 return newPosition;
-
 
             case 1:
                 if (roadSegments.Contains(new RoadSegment(new int2(currrentPosition.x + 1, currrentPosition.y), new int2(currrentPosition.x, currrentPosition.y + 1))))
@@ -264,6 +236,27 @@ public class MapGenerator : MonoBehaviour
         }
     }
     #endregion // Node Placement
+
+    [CustomEditor(typeof(MapGenerator))]
+    public class MapGeneratorEditor: Editor
+    {
+        MapGenerator mapGenerator;
+
+        private void OnEnable()
+        {
+            mapGenerator = target as MapGenerator;
+        }
+
+
+
+        public override void OnInspectorGUI()
+        {
+            if (GUILayout.Button("Generator New Map"))
+                mapGenerator.Generate();
+
+            base.OnInspectorGUI();
+        }
+    }
 }
 
 
