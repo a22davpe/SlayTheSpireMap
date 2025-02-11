@@ -142,9 +142,11 @@ public class SpawnContainerEditor : Editor
     {
         EditorGUI.BeginChangeCheck();
 
-        titleStyle = new GUIStyle(GUI.skin.label);
 
+        titleStyle = new GUIStyle(GUI.skin.label);
         titleStyle.richText = true;
+
+        EditorGUILayout.ObjectField("Script:", MonoScript.FromScriptableObject((SpawningContainer)target), typeof(SpawningContainer), false);
 
         //__________Nodes_______________
         container.showNodes = EditorGUILayout.Foldout(container.showNodes, "Nodes");
