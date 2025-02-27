@@ -1,39 +1,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.TerrainTools;
 using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     /* TODO
-    
+
     Iteration over road segments is ineffectiv kan use node info instead
-    
+
     */
 
 
     #region Inspector variables
 
     [Header("Road properties")]
-    public int maxMapLength;
-    public int minMapLength;
-    public int maxWidth = 5;
+    [SerializeField] int maxMapLength;
+    [SerializeField] int minMapLength;
+    [SerializeField] int maxWidth = 5;
 
-    public int pathAmount = 6;
+    [SerializeField] int pathAmount = 6;
 
     [Space()]
-    public bool paintRoads;
+    [SerializeField] bool paintRoads;
 
-    public LineRenderer lineRendererPrefab;
+    [SerializeField] LineRenderer lineRendererPrefab;
 
     [Header("Noder properties")]
 
-    public float shuffleStrength = 0.3f;
+    [SerializeField] float shuffleStrength = 0.3f;
 
-    public float distanceBetweenNodes = 1;
-    public SpawningContainer spawningContainer;
+    [SerializeField] float distanceBetweenNodes = 1;
+    [SerializeField] SpawningContainer spawningContainer;
 
     #endregion // Inspector variables
 
@@ -57,7 +56,7 @@ public class MapGenerator : MonoBehaviour
     public void Generate()
     {
         //Inspo
-        //https://steamcommunity.com/sharedfiles/filedetails/?id=2830078257 
+        //https://steamcommunity.com/sharedfiles/filedetails/?id=2830078257
 
         ResetValues(out int mapLength);
 
@@ -153,6 +152,7 @@ public class MapGenerator : MonoBehaviour
 
     int2 GetNewRoadSegmentPosition(int2 currrentPosition)
     {
+
         //If no new ways found, just go fowards
         if (repitions > 6)
             return currrentPosition + new int2(0, 1);
@@ -237,6 +237,8 @@ public class MapGenerator : MonoBehaviour
     }
     #endregion // Node Placement
 
+
+#region CustomEditor
     [CustomEditor(typeof(MapGenerator))]
     public class MapGeneratorEditor: Editor
     {
@@ -258,5 +260,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
 }
+#endregion //CustomEditor
 
 
