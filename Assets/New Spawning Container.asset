@@ -38,3 +38,6 @@ MonoBehaviour:
   notPremitted:
   - floorLevel: 18
     mapNode: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
+  showNodes: 1
+  showConstantFloors: 0
+  showNonPremitted: 0

@@ -29,6 +29,7 @@ public class MapGenerator : MonoBehaviour
 
     [Header("Noder properties")]
 
+    [SerializeField] bool placeNodes = true;
     [SerializeField] float shuffleStrength = 0.3f;
 
     [SerializeField] float distanceBetweenNodes = 1;
@@ -66,7 +67,8 @@ public class MapGenerator : MonoBehaviour
             MakeRoad(mapLength, i);
         }
 
-        PlaceNodes();
+        if(placeNodes)
+            PlaceNodes();
     }
 
     /// <summary>

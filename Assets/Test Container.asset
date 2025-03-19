@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3b52abce951d224b9f112e08ad0b323, type: 3}
+  m_Name: Test Container
+  m_EditorClassIdentifier: 
+  nodes:
+  - spawnOdds: 1
+    unlockLevel: 0
+    node: {fileID: 8598199084098841335, guid: 52d44a78c1bbe1a40bf07df60dcf4136, type: 3}
+  constantFloors: []
+  notPremitted:
+  - floorLevel: 5
+    mapNode: {fileID: 8598199084098841335, guid: 0e19b29824cd20b45aef48633345c7ec, type: 3}
+  showNodes: 1
+  showConstantFloors: 1
+  showNonPremitted: 0

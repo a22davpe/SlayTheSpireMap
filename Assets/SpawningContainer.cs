@@ -12,11 +12,11 @@ using UnityEditor;
 [Serializable]
 public class SpawningContainer : ScriptableObject
 {
-    public List<Node> nodes;
+    public List<Node> nodes = new List<Node>();
 
-    public List<FloorInfo> constantFloors;
+    public List<FloorInfo> constantFloors = new List<FloorInfo>();
 
-    public List<FloorInfo> notPremitted;
+    public List<FloorInfo> notPremitted = new List<FloorInfo>();
 
     public MapNodeBehaviour GetMapNode(int2 index)
     {
@@ -149,39 +149,7 @@ public class SpawnContainerEditor : Editor
         EditorGUILayout.ObjectField("Script:", MonoScript.FromScriptableObject((SpawningContainer)target), typeof(SpawningContainer), false);
 
         //__________Nodes_______________
-        container.showNodes = EditorGUILayout.Foldout(container.showNodes, "Nodes");
-
-        if (container.showNodes)
-        {
-            for (global::System.Int32 i = 0; i < container.nodes.Count; i++)
-            {
-                EditorGUILayout.LabelField("----------------------------");
-
-                Node node = container.nodes[i];
-
-                if (container.nodes[i].node)
-                    EditorGUILayout.LabelField($"<color=#{GetColorByNodeType(node.node.nodeType).ToHexString()}>{node.node.name}</color>", titleStyle);
-                
-                else
-                    EditorGUILayout.LabelField("No node avaliable");
-
-                container.nodes[i].spawnOdds = EditorGUILayout.FloatField("SpawnOdds", node.spawnOdds);
-                container.nodes[i].unlockLevel = EditorGUILayout.IntField("Unlock level", node.unlockLevel);
-
-                container.nodes[i].node = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", node.node, typeof(MapNodeBehaviour), true);
-
-                if (GUILayout.Button("Remove"))
-                {
-                    container.nodes.RemoveAt(i);
-                }
-            }
-
-            EditorGUILayout.LabelField("----------------------------");
-
-            if (GUILayout.Button("Add Node"))
-                container.nodes.Add(new Node());
-            EditorGUILayout.LabelField("----------------------------");
-        }
+        DrawNodeList();
 
         BetterSpace(2);
 
@@ -208,6 +176,43 @@ public class SpawnContainerEditor : Editor
 
     }
 
+    private void DrawNodeList()
+    {
+        container.showNodes = EditorGUILayout.Foldout(container.showNodes, "Nodes");
+
+        if (container.showNodes)
+        {
+            for (global::System.Int32 i = 0; i < container.nodes.Count; i++)
+            {
+                EditorGUILayout.LabelField("----------------------------");
+
+                Node node = container.nodes[i];
+
+                if (container.nodes[i].node)
+                    EditorGUILayout.LabelField($"<color=#{GetColorByNodeType(node.node.nodeType).ToHexString()}>{node.node.name}</color>", titleStyle);
+
+                else
+                    EditorGUILayout.LabelField("No node avaliable");
+
+                container.nodes[i].spawnOdds = EditorGUILayout.FloatField("SpawnOdds", node.spawnOdds);
+                container.nodes[i].unlockLevel = EditorGUILayout.IntField("Unlock level", node.unlockLevel);
+
+                container.nodes[i].node = (MapNodeBehaviour)EditorGUILayout.ObjectField("Node", node.node, typeof(MapNodeBehaviour), true);
+
+                if (GUILayout.Button("Remove"))
+                {
+                    container.nodes.RemoveAt(i);
+                }
+            }
+
+            EditorGUILayout.LabelField("----------------------------");
+
+            if (GUILayout.Button("Add Node"))
+                container.nodes.Add(new Node());
+            EditorGUILayout.LabelField("----------------------------");
+        }
+    }
+
     private void DrawFloorInfoList(string name ,ref bool show, List<FloorInfo> information)
     {
         show = EditorGUILayout.Foldout(show, name);
@@ -219,7 +224,7 @@ public class SpawnContainerEditor : Editor
                 EditorGUILayout.LabelField("----------------------------");
 
                 if (information[i].mapNode)
-                    EditorGUILayout.LabelField(information[i].mapNode.name);
+                    EditorGUILayout.LabelField($"<color=#{GetColorByNodeType(information[i].mapNode.nodeType).ToHexString()}>{information[i].mapNode.name}</color>", titleStyle);
                 else
                     EditorGUILayout.LabelField("No node avaliable");
 
@@ -271,16 +276,5 @@ public class SpawnContainerEditor : Editor
         }
     }
 
-}
-
-
-public enum NodeType
-{
-    Elite,
-    Event,
-    Market,
-    Monster,
-    RestSite,
-    Treasure
 }
 

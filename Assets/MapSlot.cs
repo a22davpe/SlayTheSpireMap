@@ -17,8 +17,6 @@ public class MapNodeBehaviour : MonoBehaviour, IPointerClickHandler
         Debug.Log($"Nodes out: {nodeInfo.RoadsOut.Count}");
     }
 }
-
-
 public class NodeInfo{
 
     public NodeInfo(int2 index, Vector2 position){
@@ -35,4 +33,13 @@ public class NodeInfo{
 
     public Vector2 position;
 
+}
+public enum NodeType
+{
+    Elite,
+    Event,
+    Market,
+    Monster,
+    RestSite,
+    Treasure
 }
